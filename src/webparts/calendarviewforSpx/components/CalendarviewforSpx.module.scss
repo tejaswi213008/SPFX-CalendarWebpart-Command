@@ -1,0 +1,729 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+// Design tokens – 8px spacing grid
+$spacing-xxs: 4px;
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+$spacing-xl: 24px;
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-pill: 9999px;
+$primary-strong: #106ebe;
+$primary-hover: #005a9e;
+$accent-teal: #03787c;
+$accent-teal-hover: #026a6e;
+$neutral-border: #e1dfdd;
+$neutral-bg: #f3f2f1;
+$neutral-bg-subtle: #faf9f8;
+$neutral-text-muted: #605e5c;
+$neutral-text: #323130;
+
+.calendarviewforSpx {
+  overflow: hidden;
+  padding: $spacing-md;
+  color: "[theme:bodyText, default: #323130]";
+  color: var(--bodyText);
+  &.teams {
+    font-family: $ms-font-family-fallbacks;
+  }
+}
+
+.message,
+.error {
+  padding: 1em;
+  text-align: center;
+}
+
+.error {
+  padding: 1em;
+  color: "[theme:errorText, default: #a4262c]";
+  background: "[theme:errorBackground, default: #fde7e9]";
+  p {
+    margin: 0.5em 0;
+  }
+}
+
+// ─── Calendar ─────────────────────────────────────────────────────────────
+.calendar {
+  font-family: 'Segoe UI', 'Segoe UI Web', sans-serif;
+  background: #fff;
+  border-radius: $radius-md;
+  border: 1px solid $neutral-border;
+  padding: $spacing-md;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  /* Calendar math assumes Sun→Sat order; force LTR so RTL sites do not mirror columns vs headers */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.calendarHeader {
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1px solid $neutral-border;
+}
+
+.calendarHeaderInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+  position: relative;
+  min-height: 40px;
+}
+
+.calendarFilters {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.calendarTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  pointer-events: none;
+}
+
+.calendarTitle > * {
+  pointer-events: auto;
+}
+
+.calendarHeaderRight {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.monthTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: $neutral-text;
+}
+
+.weekdayRow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: $neutral-text-muted;
+  padding: $spacing-xs 0;
+  margin-bottom: $spacing-xxs;
+}
+
+.weekdayCell {
+  padding: $spacing-xxs 0;
+  min-width: 0;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: $spacing-sm;
+  align-items: stretch;
+  /* Keep row flow explicit so host page flex/grid quirks cannot affect placement */
+  grid-auto-flow: row;
+}
+
+.dayCell {
+  min-width: 0;
+  min-height: 120px;
+  padding: $spacing-xs;
+  background: #fff;
+  border-radius: $radius-md;
+  border: 1px solid transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  &:hover {
+    background: $neutral-bg-subtle;
+    border-color: $neutral-border;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid "[theme:themePrimary, default: #0078d4]";
+    outline-offset: 1px;
+  }
+}
+
+.otherMonth {
+  background: $neutral-bg-subtle;
+  color: $neutral-text-muted;
+  opacity: 0.7;
+  &:hover {
+    background: #f3f2f1;
+    opacity: 0.85;
+  }
+}
+
+.today {
+  border: 2px solid "[theme:themePrimary, default: #0078d4]";
+  background: #e6f2fa;
+  font-weight: 600;
+  &:hover {
+    background: #d6ebf7;
+  }
+}
+
+.dayNumber {
+  font-weight: 600;
+  font-size: 13px;
+  color: $neutral-text;
+  margin-bottom: $spacing-xs;
+  display: block;
+}
+
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xxs;
+}
+
+.eventPill {
+  padding: 3px 6px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  &:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+}
+
+.eventIcon {
+  font-size: 11px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.consultingEvent {
+  background: #bfbfbf;
+  color: #000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.scheduledEvent {
+  background: #ffd6db;
+  color: #000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-top: $spacing-md;
+  padding-top: $spacing-sm;
+  border-top: 1px solid $neutral-border;
+}
+
+.legendItem {
+  padding: $spacing-xxs $spacing-sm;
+  border-radius: $radius-sm;
+  color: #000;
+}
+
+.consultingLegend {
+  background: #bfbfbf;
+}
+
+.scheduledLegend {
+  background: #ffd6db;
+}
+
+// ─── Modal ────────────────────────────────────────────────────────────────
+.powerAppsModalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-sm;
+  box-sizing: border-box;
+}
+
+.powerAppsModal {
+  background-color: #fff;
+  width: 100%;
+  max-width: 640px;
+  height: 90vh;
+  max-height: 90vh;
+  min-height: 520px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: $radius-md;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (min-width: 641px) {
+  .powerAppsModal {
+    max-width: 720px;
+    min-height: 620px;
+  }
+}
+
+@media (min-width: 901px) {
+  .powerAppsModal {
+    max-width: 960px;
+    min-height: 700px;
+  }
+}
+
+.powerAppsModalView {
+  .modalFormField input:not(:global(.ms-TextField-field)):disabled,
+  .modalFormField select:disabled,
+  .modalFormField [role="combobox"][aria-disabled="true"] {
+    background: $neutral-bg-subtle !important;
+    color: $neutral-text-muted;
+    border-color: $neutral-border;
+    cursor: default;
+  }
+  .modalFormField input:not(:global(.ms-TextField-field)):read-only,
+  .modalFormField textarea:read-only {
+    background: $neutral-bg-subtle !important;
+    color: $neutral-text-muted;
+  }
+  :global(.e-richtexteditor .e-rte-content .e-content) {
+    color: $neutral-text-muted;
+  }
+  :global(.e-richtexteditor .e-rte-toolbar),
+  :global(.e-richtexteditor .e-toolbar-wrapper) {
+    pointer-events: none;
+    opacity: 0.85;
+  }
+}
+
+.powerAppsModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: $spacing-sm $spacing-md;
+  padding-left: $spacing-md;
+  border-bottom: 1px solid $neutral-border;
+  background: $neutral-bg-subtle;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.modalHeaderActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+// Modal header buttons: alignment and Fluent overrides
+.powerAppsModalHeader [class*="ms-Button"],
+.modalHeaderActions [class*="ms-Button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  border-radius: $radius-sm;
+  font-weight: 600;
+  &:focus {
+    outline: 2px solid "[theme:themePrimary, default: #0078d4]";
+    outline-offset: 2px;
+  }
+}
+
+.modalHeaderActions :global(.ms-Button-flexContainer) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 6px;
+  height: 100%;
+}
+
+.modalHeaderActions :global(.ms-Button-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  font-size: 14px;
+  min-width: 14px;
+  height: 14px;
+  transform: translateY(0);
+}
+
+.modalHeaderActions :global(.ms-Button-label) {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.modalHeaderActions :global(.ms-Button-textContainer) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.powerAppsModalHeader :global(.ms-Button--primary) {
+  background: $accent-teal !important;
+  border: none !important;
+  color: #fff !important;
+  &:hover {
+    background: $accent-teal-hover !important;
+    box-shadow: 0 2px 4px rgba(3, 120, 124, 0.35);
+  }
+}
+
+.powerAppsModalHeader :global(.ms-Button--default) {
+  background: #fff !important;
+  border: 1px solid $neutral-border !important;
+  color: $neutral-text !important;
+  &:hover {
+    background: $neutral-bg !important;
+    border-color: #d2d0ce !important;
+    color: $neutral-text !important;
+  }
+}
+
+.modalHeaderActions .accentHeaderButton:global(.ms-Button--default) {
+  background: $accent-teal !important;
+  border: 1px solid $accent-teal !important;
+  color: #fff !important;
+  &:hover {
+    background: $accent-teal-hover !important;
+    border-color: $accent-teal-hover !important;
+    color: #fff !important;
+  }
+}
+
+.modalHeaderActions .accentHeaderButton :global(.ms-Button-label),
+.modalHeaderActions .accentHeaderButton :global(.ms-Button-icon) {
+  color: #fff !important;
+}
+
+// Calendar "New event" primary button
+.calendarHeader :global(.ms-Button--primary) {
+  background: $accent-teal !important;
+  border: none !important;
+  font-weight: 600;
+  color: #fff !important;
+  &:hover {
+    background: $accent-teal-hover !important;
+  }
+}
+
+.newEventButton {
+  background: $accent-teal !important;
+  border-color: $accent-teal !important;
+  color: #fff;
+}
+
+.newEventButton:hover {
+  background: $accent-teal-hover !important;
+  border-color: $accent-teal-hover !important;
+}
+
+.powerAppsModalBody {
+  flex: 1;
+  padding: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalForm {
+  padding: $spacing-md;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 640px) {
+  .modalForm {
+    padding: $spacing-sm;
+  }
+}
+
+.modalFormSectionStart {
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $neutral-border;
+}
+
+.modalFormField {
+  margin-bottom: $spacing-md;
+  label,
+  :global(.ms-Label) {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+    color: $neutral-text;
+  }
+}
+
+.modalFormField:last-child {
+  margin-bottom: 0;
+}
+
+/* Native inputs/selects only — Fluent TextField wraps inputs in .ms-TextField-fieldGroup; styling the inner input duplicates borders. */
+.modalFormField input:not(:global(.ms-TextField-field)),
+.modalFormField select {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  border: 1px solid "[theme:inputBorder, default: #605e5c]";
+  border-radius: $radius-sm;
+  box-sizing: border-box;
+  background: #fff;
+  color: $neutral-text;
+}
+
+.modalFormField input:not(:global(.ms-TextField-field)):focus,
+.modalFormField select:focus {
+  outline: none;
+  border-color: "[theme:themePrimary, default: #0078d4]";
+  box-shadow: 0 0 0 1px "[theme:themePrimary, default: #0078d4]";
+}
+
+.modalFormField input:not(:global(.ms-TextField-field)):disabled,
+.modalFormField select:disabled {
+  background: $neutral-bg-subtle;
+  color: $neutral-text-muted;
+  cursor: default;
+  border-color: $neutral-border;
+}
+
+.modalFormField input:not(:global(.ms-TextField-field)):read-only {
+  background: $neutral-bg-subtle;
+  color: $neutral-text-muted;
+}
+
+.modalFormError {
+  color: "[theme:errorText, default: #a4262c]";
+  font-size: 13px;
+  margin-top: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  background: "[theme:errorBackground, default: #fde7e9]";
+  border-radius: $radius-sm;
+}
+
+.modalFormTwoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg $spacing-xl;
+  margin-bottom: 0;
+}
+
+.modalForm .consultFormEdit [class*="StackItem"] {
+  min-width: 0;
+}
+
+.modalForm .consultFormEdit .modalFormField {
+  min-width: 0;
+}
+
+.modalForm .consultFormEdit .consultFormRow {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md $spacing-xl;
+}
+
+.modalForm .consultFormEdit .consultFormRow > * {
+  min-width: 0;
+}
+
+.modalForm .modalFormField input:not(:global(.ms-TextField-field)),
+.modalForm .modalFormField select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .modalFormTwoCol {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+.modalFormCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (max-width: 600px) {
+  .modalFormCol {
+    margin-bottom: 0;
+  }
+  .modalFormTwoCol .modalFormCol + .modalFormCol {
+    margin-top: 0;
+  }
+}
+
+.modalFormTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: $spacing-xs 12px;
+  font-size: 14px;
+  border: 1px solid "[theme:inputBorder, default: #605e5c]";
+  border-radius: $radius-sm;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  background: #fff;
+}
+
+.modalFormTextarea:focus {
+  outline: none;
+  border-color: "[theme:themePrimary, default: #0078d4]";
+}
+
+.modalFormTextarea:disabled {
+  background: $neutral-bg-subtle;
+  cursor: default;
+}
+
+.modalFormSelect {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid "[theme:inputBorder, default: #605e5c]";
+  border-radius: $radius-sm;
+  box-sizing: border-box;
+  background: #fff;
+  cursor: pointer;
+}
+
+.modalFormSelect:focus {
+  outline: none;
+  border-color: "[theme:themePrimary, default: #0078d4]";
+}
+
+.modalFormSelect:disabled {
+  background: $neutral-bg-subtle;
+  cursor: default;
+  color: $neutral-text-muted;
+}
+
+.modalFormHint {
+  font-size: 12px;
+  color: "[theme:bodySubtext, default: #605e5c]";
+  margin: $spacing-xs 0 0 0;
+}
+
+// Rich text (React Quill) – limit height and scroll in modal
+.quillRte {
+  width: 100%;
+
+  :global(.ql-toolbar) {
+    border-radius: $radius-sm $radius-sm 0 0;
+    border-color: "[theme:inputBorder, default: #605e5c]";
+    font-size: 14px;
+  }
+
+  :global(.ql-container) {
+    border-radius: 0 0 $radius-sm $radius-sm;
+    border-color: "[theme:inputBorder, default: #605e5c]";
+    font-size: 14px;
+  }
+
+  :global(.ql-editor) {
+    min-height: 100px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+/* Divider above attachments comes from parent .modalFormSectionStart — avoid double horizontal rules */
+.modalFormAttachments {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.modalFormAttachmentsLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: $spacing-xs;
+  color: $neutral-text;
+}
+
+.modalFormAttachmentsEmpty {
+  font-size: 13px;
+  color: $neutral-text-muted;
+  margin: $spacing-xxs 0 $spacing-xs 0;
+}
+
+.modalFormAttachmentsList {
+  list-style: none;
+  margin: $spacing-xxs 0 $spacing-xs 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xxs;
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    flex-wrap: wrap;
+    a {
+      font-size: 14px;
+      color: "[theme:themePrimary, default: #0078d4]";
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.modalFormAttachLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: "[theme:themePrimary, default: #0078d4]";
+  background: none;
+  border: none;
+  padding: $spacing-xxs 0;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: $spacing-xxs;
+}
+
+.modalFormAttachLink:hover {
+  text-decoration: underline;
+}
+
+.modalFormAttachLink:focus {
+  outline: 2px solid "[theme:themePrimary, default: #0078d4]";
+  outline-offset: 2px;
+}

@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "24.13.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "calendar-view",
+    "libraryId": "cb3ab78a-b608-4c67-bd41-fb453cbe35cc",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "calendar-view",
+    "solutionShortDescription": "calendar-view description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
