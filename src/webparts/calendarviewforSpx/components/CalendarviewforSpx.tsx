@@ -688,11 +688,15 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
     scheduledDelivery: 6,
     deliveryMode: 7,
     deliveryLocation: 8,
-    deliveryRoom: 9,
-    pgeDependent: 10,
-    postnatalCare: 11,
-    familySocial: 12,
-    activeConcerns: 13
+    babyMrn: 9,
+    baby2Mrn: 10,
+    baby3Mrn: 11,
+    baby4Mrn: 12,
+    deliveryRoom: 13,
+    pgeDependent: 14,
+    postnatalCare: 15,
+    familySocial: 16,
+    activeConcerns: 17
   } as const;
 
   /* Administrative tab: explicit tab order (not left-to-right grid order) */
@@ -1627,6 +1631,60 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
                           </div>
                         </div>
                       </div>
+                      <div className={(styles as Record<string, string>).modalFormTwoCol}>
+                        <div className={(styles as Record<string, string>).modalFormCol}>
+                          <div className={styles.modalFormField}>
+                            <label htmlFor="modal-med-baby-mrn">Baby MRN</label>
+                            <input
+                              id="modal-med-baby-mrn"
+                              type="text"
+                              tabIndex={medicalTabOrder.babyMrn}
+                              value={formData.BabyMRN}
+                              onChange={(e): void => setFormData(prev => ({ ...prev, BabyMRN: e.target.value }))}
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </div>
+                          <div className={styles.modalFormField}>
+                            <label htmlFor="modal-med-baby3-mrn">Baby 3 MRN</label>
+                            <input
+                              id="modal-med-baby3-mrn"
+                              type="text"
+                              tabIndex={medicalTabOrder.baby3Mrn}
+                              value={formData.Baby3MRN}
+                              onChange={(e): void => setFormData(prev => ({ ...prev, Baby3MRN: e.target.value }))}
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </div>
+                        </div>
+                        <div className={(styles as Record<string, string>).modalFormCol}>
+                          <div className={styles.modalFormField}>
+                            <label htmlFor="modal-med-baby2-mrn">Baby 2 MRN</label>
+                            <input
+                              id="modal-med-baby2-mrn"
+                              type="text"
+                              tabIndex={medicalTabOrder.baby2Mrn}
+                              value={formData.Baby2MRN}
+                              onChange={(e): void => setFormData(prev => ({ ...prev, Baby2MRN: e.target.value }))}
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </div>
+                          <div className={styles.modalFormField}>
+                            <label htmlFor="modal-med-baby4-mrn">Baby 4 MRN</label>
+                            <input
+                              id="modal-med-baby4-mrn"
+                              type="text"
+                              tabIndex={medicalTabOrder.baby4Mrn}
+                              value={formData.Baby4MRN}
+                              onChange={(e): void => setFormData(prev => ({ ...prev, Baby4MRN: e.target.value }))}
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </div>
+                        </div>
+                      </div>
                       <div className={styles.modalFormField}>
                         <Label>Delivery Room Considerations</Label>
                         <RichTextEditor
@@ -1726,9 +1784,9 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
                             type="text"
                             tabIndex={administrativeTabOrder.baby2Mrn}
                             value={formData.Baby2MRN}
-                            onChange={(e): void => setFormData(prev => ({ ...prev, Baby2MRN: e.target.value }))}
-                            disabled={isReadOnly}
-                            readOnly={isReadOnly}
+                            title="Edit this field in the Medical tab"
+                            disabled
+                            readOnly
                           />
                         </div>
                         <div className={styles.modalFormField}>
@@ -1738,9 +1796,9 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
                             type="text"
                             tabIndex={administrativeTabOrder.baby4Mrn}
                             value={formData.Baby4MRN}
-                            onChange={(e): void => setFormData(prev => ({ ...prev, Baby4MRN: e.target.value }))}
-                            disabled={isReadOnly}
-                            readOnly={isReadOnly}
+                            title="Edit this field in the Medical tab"
+                            disabled
+                            readOnly
                           />
                         </div>
                       </div>
@@ -1764,9 +1822,9 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
                             type="text"
                             tabIndex={administrativeTabOrder.babyMrn}
                             value={formData.BabyMRN}
-                            onChange={(e): void => setFormData(prev => ({ ...prev, BabyMRN: e.target.value }))}
-                            disabled={isReadOnly}
-                            readOnly={isReadOnly}
+                            title="Edit this field in the Medical tab"
+                            disabled
+                            readOnly
                           />
                         </div>
                         <div className={styles.modalFormField}>
@@ -1776,9 +1834,9 @@ export default function CalendarviewforSpx(props: ICalendarviewforSpxProps): Rea
                             type="text"
                             tabIndex={administrativeTabOrder.baby3Mrn}
                             value={formData.Baby3MRN}
-                            onChange={(e): void => setFormData(prev => ({ ...prev, Baby3MRN: e.target.value }))}
-                            disabled={isReadOnly}
-                            readOnly={isReadOnly}
+                            title="Edit this field in the Medical tab"
+                            disabled
+                            readOnly
                           />
                         </div>
                       </div>

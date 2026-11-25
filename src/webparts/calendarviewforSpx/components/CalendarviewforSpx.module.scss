@@ -337,12 +337,16 @@ $neutral-text: #323130;
 }
 
 // Modal header buttons: alignment and Fluent overrides
-.powerAppsModalHeader [class*="ms-Button"],
-.modalHeaderActions [class*="ms-Button"] {
+// Target only the button root (.ms-Button), NOT inner parts like
+// .ms-Button-icon / .ms-Button-label, otherwise they inherit min-height
+// and the icon is pushed out of line with the text.
+.modalHeaderActions :global(.ms-Button) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height: 36px;
   min-height: 36px;
+  padding: 0 14px;
   border-radius: $radius-sm;
   font-weight: 600;
   &:focus {
@@ -352,37 +356,37 @@ $neutral-text: #323130;
 }
 
 .modalHeaderActions :global(.ms-Button-flexContainer) {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  column-gap: 6px;
   height: 100%;
 }
 
 .modalHeaderActions :global(.ms-Button-icon) {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-  margin: 0;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 0 0;
   font-size: 14px;
-  min-width: 14px;
-  height: 14px;
-  transform: translateY(0);
-}
-
-.modalHeaderActions :global(.ms-Button-label) {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 16px;
 }
 
 .modalHeaderActions :global(.ms-Button-textContainer) {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  line-height: 1;
+  height: 16px;
+}
+
+.modalHeaderActions :global(.ms-Button-label) {
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
 }
 
 .powerAppsModalHeader :global(.ms-Button--primary) {
